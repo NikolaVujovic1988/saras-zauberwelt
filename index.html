@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Saras Zauberwelt</title>
+<meta name="description" content="Eine Zauberwelt zum Malen, Anziehen, Gärtnern, Zaubern und Kuscheln – für Sara">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sara">
+<meta name="theme-color" content="#31215c">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Floating ambient stars (filled by JS) -->
+<div id="ambient" aria-hidden="true"></div>
+
+<!-- shared paint servers (must live in a rendered svg, ids referenced across the app) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="regenbogen-fill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ef6461"/><stop offset=".25" stop-color="#f5d76e"/>
+      <stop offset=".5" stop-color="#8bc98a"/><stop offset=".75" stop-color="#7ec8e3"/>
+      <stop offset="1" stop-color="#9b7ede"/>
+    </linearGradient>
+    <radialGradient id="glitzer-fill" cx=".35" cy=".3" r="1">
+      <stop offset="0" stop-color="#fdf0c2"/><stop offset=".55" stop-color="#f5d76e"/>
+      <stop offset="1" stop-color="#d9a441"/>
+    </radialGradient>
+    <linearGradient id="m-horn" x1="0" y1="1" x2="0.4" y2="0">
+      <stop offset="0" stop-color="#f6dd8d"/><stop offset="1" stop-color="#e9b64d"/>
+    </linearGradient>
+    <linearGradient id="m-mane" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f9a8cf"/><stop offset=".55" stop-color="#d98ae0"/><stop offset="1" stop-color="#9d7bec"/>
+    </linearGradient>
+    <linearGradient id="m-mane2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fac1dc"/><stop offset="1" stop-color="#b78ae6"/>
+    </linearGradient>
+    <linearGradient id="m-face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f3ecfa"/>
+    </linearGradient>
+    <linearGradient id="d-skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbe0c8"/><stop offset="1" stop-color="#f3ceac"/>
+    </linearGradient>
+    <linearGradient id="d-dress1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fa9ec1"/><stop offset="1" stop-color="#e86fa4"/>
+    </linearGradient>
+    <linearGradient id="d-dress2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a98be8"/><stop offset="1" stop-color="#7c5cc9"/>
+    </linearGradient>
+    <linearGradient id="d-dress3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b8ecd7"/><stop offset="1" stop-color="#7fd4ae"/>
+    </linearGradient>
+    <linearGradient id="d-dress4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6d888"/><stop offset="1" stop-color="#e6ac45"/>
+    </linearGradient>
+    <linearGradient id="d-wing" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset="1" stop-color="#cfe8ff" stop-opacity=".7"/>
+    </linearGradient>
+    <linearGradient id="d-hairblond" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8dc90"/><stop offset="1" stop-color="#eec163"/>
+    </linearGradient>
+    <linearGradient id="d-hairbraun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a5714a"/><stop offset="1" stop-color="#845234"/>
+    </linearGradient>
+    <linearGradient id="d-hairrosa" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbc0da"/><stop offset="1" stop-color="#ef8fc0"/>
+    </linearGradient>
+    <linearGradient id="d-hairlila" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9a4f2"/><stop offset="1" stop-color="#9d72d8"/>
+    </linearGradient>
+    <linearGradient id="f-mane" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#f9a8cf"/><stop offset=".5" stop-color="#d98ae0"/><stop offset="1" stop-color="#9d7bec"/>
+    </linearGradient>
+    <radialGradient id="orb-glass" cx=".35" cy=".28" r="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".45"/>
+      <stop offset=".45" stop-color="#ffffff" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".05"/>
+    </radialGradient>
+    <linearGradient id="trank-liquid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9be8cf"/><stop offset="1" stop-color="#5fc9a8"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- ============ HUD (shared) ============ -->
+<div id="hud" class="hud">
+  <button class="hud-pill hud-sara" data-go="karte" aria-label="Zauberkarte">
+    <span class="hud-avatar" aria-hidden="true">
+      <svg viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="24" fill="#fdf0f6"/>
+        <path fill="url(#d-hairblond)" d="M10 22 C10 8 38 8 38 22 C40 32 38 40 34 44 L14 44 C10 40 8 32 10 22 Z"/>
+        <circle fill="url(#d-skin)" cx="24" cy="25" r="11"/>
+        <path fill="url(#d-hairblond)" d="M13 24 C13 13 35 13 35 24 C32 17 16 17 13 24 Z"/>
+        <circle fill="#3d2b66" cx="20" cy="25" r="1.8"/><circle fill="#3d2b66" cx="28" cy="25" r="1.8"/>
+        <path d="M21 29 Q24 31.5 27 29" fill="none" stroke="#b06a4d" stroke-width="1.6" stroke-linecap="round"/>
+        <circle fill="#f8a8c8" opacity=".6" cx="17" cy="28" r="2"/><circle fill="#f8a8c8" opacity=".6" cx="31" cy="28" r="2"/>
+      </svg>
+    </span>
+    <span class="hud-name">Sara</span>
+  </button>
+  <div class="hud-right">
+    <div class="hud-pill hud-dust" id="hud-dust" aria-label="Feenstaub">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#f5d76e" d="M12 1 l2.6 6.4 6.9 .8 -5.2 4.7 1.4 6.8 -5.7 -3.6 -5.7 3.6 1.4 -6.8 -5.2 -4.7 6.9 -.8 Z"/></svg>
+      <span id="dust-count">0</span>
+    </div>
+    <button class="hud-pill hud-gear" data-go="eltern-gate" aria-label="Eltern-Ecke">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4c0-.6-.05-1.1-.14-1.6l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-2.7-1.6L15.4 2h-4l-.4 2.8a7.6 7.6 0 0 0-2.7 1.6l-2.4-1-2 3.4 2 1.6c-.08.5-.13 1-.13 1.6s.05 1.1.14 1.6l-2 1.6 2 3.4 2.4-1c.8.7 1.7 1.2 2.7 1.6l.4 2.8h4l.4-2.8c1-.4 1.9-.9 2.7-1.6l2.4 1 2-3.4-2-1.6c.1-.5.14-1 .14-1.6Z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ============ 1 · ZAUBERKARTE ============ -->
+<main id="screen-karte" class="screen is-active" aria-label="Zauberkarte">
+  <svg class="karte-deko" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <circle cx="600" cy="180" r="64" fill="#fdf3cf" opacity=".9" filter="url(#moon-blur)"/>
+    <defs><filter id="moon-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10"/></filter></defs>
+    <path id="karte-pfad" d="M240 640 C340 560 420 470 560 430 C700 390 760 300 850 260" fill="none" stroke="#f0dcae" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.1 22" opacity=".65"/>
+  </svg>
+  <div class="karte-titel" aria-hidden="true">
+    <span>✦</span> WILLKOMMEN <span>✦</span>
+  </div>
+  <nav class="karte" id="karte-orbs" aria-label="Spielwelt"></nav>
+</main>
+
+<!-- ============ 2 · MAL-ATELIER ============ -->
+<section id="screen-malen" class="screen" aria-label="Mal-Atelier">
+  <button class="btn-home" data-go="karte" aria-label="Zur Karte">
+    <svg viewBox="0 0 48 48"><path d="M8 24 L24 8 L40 24 M13 21 L13 40 L35 40 L35 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="malen-kopf" id="malen-tabs" role="tablist" aria-label="Bilder"></div>
+  <div class="malen-mitte">
+    <div class="canvas-wrap" id="canvas-wrap"></div>
+    <aside class="sticker-lade" id="sticker-lade" aria-label="Sticker">
+      <p class="lade-titel">Sticker</p>
+      <div class="lade-grid" id="sticker-grid"></div>
+    </aside>
+  </div>
+  <div class="palette" id="palette" role="toolbar" aria-label="Farben"></div>
+  <button class="btn-round btn-reset" id="btn-reset" aria-label="Neu anfangen">
+    <svg viewBox="0 0 48 48"><path d="M38 22 A15 15 0 1 0 36 32" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M39 12 L39 23 L28 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</section>
+
+<!-- ============ 3 · ANKLEIDEZIMMER ============ -->
+<section id="screen-anziehen" class="screen" aria-label="Ankleidezimmer">
+  <button class="btn-home" data-go="karte" aria-label="Zur Karte">
+    <svg viewBox="0 0 48 48"><path d="M8 24 L24 8 L40 24 M13 21 L13 40 L35 40 L35 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <div class="dress-layout">
+    <div class="kat-rail" id="kat-rail" role="tablist" aria-label="Kategorien"></div>
+
+    <div class="doll-stage">
+      <div class="spotlight" aria-hidden="true"></div>
+      <svg id="doll" viewBox="0 0 320 520" aria-label="Prinzessin Sara">
+        <g id="layer-hair-back"></g>
+        <g id="doll-body">
+          <path fill="url(#d-skin)" d="M144 152 L144 186 Q160 196 176 186 L176 152 Z"/>
+          <circle cx="160" cy="112" r="55" fill="url(#d-skin)"/>
+          <circle cx="106" cy="116" r="9" fill="url(#d-skin)"/>
+          <circle cx="214" cy="116" r="9" fill="url(#d-skin)"/>
+          <path d="M124 208 C100 240 92 278 94 312" fill="none" stroke="url(#d-skin)" stroke-width="19" stroke-linecap="round"/>
+          <path d="M196 208 C220 240 228 278 226 312" fill="none" stroke="url(#d-skin)" stroke-width="19" stroke-linecap="round"/>
+          <circle cx="94" cy="316" r="12" fill="url(#d-skin)"/>
+          <circle cx="226" cy="316" r="12" fill="url(#d-skin)"/>
+          <path d="M146 396 L146 462 M174 396 L174 462" stroke="url(#d-skin)" stroke-width="19" stroke-linecap="round"/>
+          <path fill="#d4548a" d="M132 462 C132 454 140 448 148 450 C154 452 158 458 158 464 L158 472 C158 476 154 478 150 478 L138 478 C134 478 132 474 132 470 Z"/>
+          <path fill="#d4548a" d="M188 462 C188 454 180 448 172 450 C166 452 162 458 162 464 L162 472 C162 476 166 478 170 478 L182 478 C186 478 188 474 188 470 Z"/>
+        </g>
+        <g id="doll-face">
+          <ellipse cx="140" cy="112" rx="7" ry="9" fill="#3d2b66"/>
+          <ellipse cx="180" cy="112" rx="7" ry="9" fill="#3d2b66"/>
+          <circle cx="142.5" cy="108.5" r="2.6" fill="#fff"/>
+          <circle cx="182.5" cy="108.5" r="2.6" fill="#fff"/>
+          <path d="M130 96 C133 92 139 90 144 91 M170 91 C175 90 181 92 184 96" fill="none" stroke="#c99b6f" stroke-width="3.4" stroke-linecap="round"/>
+          <ellipse cx="126" cy="130" rx="9" ry="6" fill="#f8a8c8" opacity=".6"/>
+          <ellipse cx="194" cy="130" rx="9" ry="6" fill="#f8a8c8" opacity=".6"/>
+          <path d="M150 134 Q160 143 170 134" fill="none" stroke="#b06a4d" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <g id="layer-dress"></g>
+        <g id="layer-hair-front"></g>
+        <g id="layer-crown"></g>
+        <g id="layer-extra"></g>
+      </svg>
+    </div>
+
+    <aside class="item-panel">
+      <p class="panel-titel" id="panel-titel">Kleider</p>
+      <div class="item-grid" id="item-grid"></div>
+      <div class="panel-aktionen">
+        <button class="btn-round btn-magic" id="btn-zufall" aria-label="Überraschung!">
+          <svg viewBox="0 0 48 48"><path d="M30 10 L38 18 L16 40 L8 32 Z" fill="#f5d76e" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M36 6 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z" fill="currentColor"/><circle cx="10" cy="14" r="2.6" fill="currentColor"/><circle cx="42" cy="30" r="2.6" fill="currentColor"/></svg>
+        </button>
+        <button class="btn-round btn-foto" id="btn-foto" aria-label="Look speichern">
+          <svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="4"/><path d="M17 14 L20 8 L28 8 L31 14" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><circle cx="24" cy="27" r="7" fill="none" stroke="currentColor" stroke-width="4"/></svg>
+        </button>
+      </div>
+    </aside>
+  </div>
+  <div class="foto-blitz" id="foto-blitz" aria-hidden="true"></div>
+</section>
+
+<!-- ============ 4 · ZAUBERGARTEN ============ -->
+<section id="screen-garten" class="screen" aria-label="Zaubergarten">
+  <button class="btn-home" data-go="karte" aria-label="Zur Karte">
+    <svg viewBox="0 0 48 48"><path d="M8 24 L24 8 L40 24 M13 21 L13 40 L35 40 L35 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <div class="garden-scene">
+    <svg class="garden-bg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="g-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--sky-top)"/>
+          <stop offset=".62" stop-color="var(--sky-mid)"/>
+          <stop offset="1" stop-color="var(--sky-low)"/>
+        </linearGradient>
+      </defs>
+      <rect width="1000" height="620" fill="url(#g-sky)"/>
+      <path d="M842 98 A52 52 0 1 0 842 202 A64 64 0 0 1 842 98 Z" fill="var(--gold)" opacity=".95"/>
+      <g fill="var(--gold)" opacity=".9">
+        <path d="M920 190 l4 8.6 9.4 1.4 -6.8 6.6 1.6 9.4 -8.2 -4.4 -8.2 4.4 1.6 -9.4 -6.8 -6.6 9.4 -1.4 Z"/>
+        <circle cx="770" cy="110" r="5"/>
+      </g>
+      <g class="drift" fill="#ffffff" opacity=".85">
+        <ellipse cx="200" cy="110" rx="70" ry="26"/><ellipse cx="260" cy="96" rx="52" ry="22"/>
+      </g>
+      <g class="drift drift-slow" fill="#ffffff" opacity=".65">
+        <ellipse cx="620" cy="180" rx="60" ry="22"/><ellipse cx="668" cy="168" rx="44" ry="18"/>
+      </g>
+      <ellipse cx="240" cy="700" rx="620" ry="290" fill="var(--hill-back)"/>
+      <g fill="oklch(0.50 0.11 300)" opacity=".85">
+        <rect x="120" y="330" width="26" height="80"/>
+        <rect x="196" y="330" width="26" height="80"/>
+        <rect x="140" y="352" width="62" height="60"/>
+        <path d="M114 330 L133 296 L152 330 Z"/>
+        <path d="M190 330 L209 296 L228 330 Z"/>
+        <rect x="162" y="316" width="18" height="44"/>
+        <path d="M158 316 L171 292 L184 316 Z"/>
+        <path d="M171 294 L171 278 L186 283 L171 288 Z"/>
+      </g>
+      <ellipse cx="820" cy="740" rx="640" ry="300" fill="var(--hill-front)"/>
+    </svg>
+    <div class="plots" id="plots"></div>
+    <div id="falter" aria-hidden="true"></div>
+  </div>
+
+  <aside class="laden" id="samen-laden" aria-label="Samen-Laden">
+    <p class="laden-titel">🌱 Samen-Laden</p>
+    <div id="laden-liste"></div>
+  </aside>
+
+  <!-- celebration unicorn -->
+  <div id="uni-fly" class="uni-fly" hidden aria-hidden="true">
+    <svg viewBox="0 0 280 190">
+      <g fill="none" stroke-linecap="round" opacity=".85">
+        <path d="M8 78 C40 66 72 64 100 70" stroke="#f78fb3" stroke-width="9"/>
+        <path d="M10 92 C42 82 72 80 100 86" stroke="#f5d76e" stroke-width="9"/>
+        <path d="M12 106 C44 98 74 96 102 102" stroke="#a8e6cf" stroke-width="9"/>
+      </g>
+      <path fill="url(#f-mane)" d="M66 96 C46 84 26 86 16 98 C30 100 40 106 46 116 C36 118 30 126 32 136 C44 134 56 126 66 128 Z"/>
+      <path stroke="#efe6f8" stroke-width="13" stroke-linecap="round" fill="none" d="M92 128 C84 140 82 150 84 160"/>
+      <path fill="#fff" d="M64 102 C64 76 90 62 126 62 L158 62 C190 62 210 80 210 104 C210 124 194 138 170 140 L100 140 C76 138 64 122 64 102 Z"/>
+      <path stroke="#fff" stroke-width="13" stroke-linecap="round" fill="none" d="M182 122 C196 130 206 142 210 154 M158 132 C164 144 166 154 164 164"/>
+      <path stroke="#efe6f8" stroke-width="13" stroke-linecap="round" fill="none" d="M116 134 C112 146 112 156 114 164"/>
+      <circle cx="216" cy="64" r="26" fill="#fff"/>
+      <path fill="#fff" d="M230 84 C242 84 250 90 250 98 C250 105 243 110 233 110 L218 110 Z"/>
+      <path fill="#e9b64d" d="M220 38 C221 28 226 16 234 8 C236 18 235 30 230 40 Z"/>
+      <path fill="#fff" d="M234 42 C240 34 248 30 256 30 C253 40 247 48 239 51 Z"/>
+      <path fill="#f2b8d4" d="M238 42 C242 37 247 34 252 34 C250 40 246 45 241 47 Z"/>
+      <path fill="url(#f-mane)" d="M196 46 C168 30 132 28 102 40 C130 42 152 50 166 64 C142 58 116 60 96 70 C124 72 146 82 158 96 L176 88 C170 74 176 60 190 54 Z"/>
+      <circle cx="222" cy="62" r="6" fill="#3d2b66"/>
+      <circle cx="224" cy="60" r="2" fill="#fff"/>
+      <ellipse cx="208" cy="76" rx="7" ry="5" fill="#f8a8c8" opacity=".6"/>
+      <path d="M232 96 C236 99 241 99 244 96" fill="none" stroke="#8d6bb0" stroke-width="3.5" stroke-linecap="round"/>
+      <g fill="#f5d76e">
+        <path d="M120 20 l3.4 7.2 7.8 1.1 -5.6 5.4 1.3 7.8 -6.9 -3.8 -6.9 3.8 1.3 -7.8 -5.6 -5.4 7.8 -1.1 Z"/>
+        <circle cx="60" cy="40" r="4"/>
+        <circle cx="180" cy="170" r="4"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 5 · ZAUBERTURM (Tränke) ============ -->
+<section id="screen-trank" class="screen" aria-label="Zauberturm">
+  <button class="btn-home" data-go="karte" aria-label="Zur Karte">
+    <svg viewBox="0 0 48 48"><path d="M8 24 L24 8 L40 24 M13 21 L13 40 L35 40 L35 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <div class="trank-layout">
+    <div class="kessel-buehne">
+      <div class="trank-slots" id="trank-slots" aria-hidden="true"></div>
+      <svg id="kessel" viewBox="0 0 360 300" aria-label="Zauberkessel">
+        <ellipse cx="180" cy="278" rx="120" ry="16" fill="#241640" opacity=".55"/>
+        <path fill="#4b3a72" d="M60 130 C60 116 82 106 110 102 L250 102 C278 106 300 116 300 130 C300 190 258 244 180 244 C102 244 60 190 60 130 Z"/>
+        <path fill="#3a2b5e" d="M60 130 C60 148 300 148 300 130 C300 190 258 244 180 244 C102 244 60 190 60 130 Z"/>
+        <ellipse id="kessel-liquid" cx="180" cy="128" rx="118" ry="24" fill="url(#trank-liquid)"/>
+        <g id="kessel-bubbles"></g>
+        <path fill="#4b3a72" d="M44 120 C36 120 30 128 32 136 C34 144 42 148 50 146 L66 140 C58 134 52 128 44 120 Z"/>
+        <path fill="#4b3a72" d="M316 120 C324 120 330 128 328 136 C326 144 318 148 310 146 L294 140 C302 134 308 128 316 120 Z"/>
+        <path d="M120 258 L112 278 M240 258 L248 278" stroke="#3a2b5e" stroke-width="12" stroke-linecap="round"/>
+        <g id="ruehr-stab">
+          <path d="M236 40 L204 118" stroke="#c99b6f" stroke-width="10" stroke-linecap="round"/>
+          <circle cx="238" cy="36" r="9" fill="#f5d76e"/>
+        </g>
+      </svg>
+      <button class="btn-fertig" id="btn-brauen" hidden>✨ Zaubern!</button>
+      <div class="trank-ergebnis" id="trank-ergebnis" hidden></div>
+    </div>
+
+    <aside class="laden zutaten" aria-label="Zutaten">
+      <p class="laden-titel">Zutaten</p>
+      <div class="zutaten-grid" id="zutaten-grid"></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ 6 · EINHORN-STALL ============ -->
+<section id="screen-stall" class="screen" aria-label="Einhorn-Stall">
+  <button class="btn-home" data-go="karte" aria-label="Zur Karte">
+    <svg viewBox="0 0 48 48"><path d="M8 24 L24 8 L40 24 M13 21 L13 40 L35 40 L35 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <div class="glueck" id="glueck" aria-label="Glück">
+    <span class="glueck-label">Glück</span>
+    <span id="glueck-herzen"></span>
+  </div>
+
+  <div class="stall-buehne">
+    <div class="stall-boden" aria-hidden="true"></div>
+    <svg id="stall-uni" viewBox="0 0 300 260" aria-label="Einhorn Luna">
+      <ellipse cx="150" cy="244" rx="105" ry="12" fill="#241640" opacity=".4"/>
+      <!-- tail -->
+      <path fill="url(#m-mane)" d="M56 150 C36 140 20 146 14 160 C28 160 38 166 44 176 C34 178 28 188 32 198 C46 194 58 184 66 186 Z"/>
+      <!-- body -->
+      <path fill="#fff" d="M56 160 C56 128 88 110 130 110 L172 110 C210 110 234 132 234 162 C234 188 214 206 184 208 L96 208 C70 206 56 188 56 160 Z"/>
+      <!-- legs -->
+      <path stroke="#fff" stroke-width="16" stroke-linecap="round" d="M92 204 L90 240 M126 208 L126 242 M176 208 L178 242 M208 200 L212 238"/>
+      <path stroke="#efe6f8" stroke-width="16" stroke-linecap="round" d="M108 206 L106 240"/>
+      <!-- neck + head -->
+      <path fill="#fff" d="M196 128 C196 88 216 62 244 58 C260 56 272 66 272 80 C272 92 264 100 254 104 L232 148 Z"/>
+      <circle cx="250" cy="84" r="30" fill="#fff"/>
+      <path fill="#fff" d="M266 106 C280 106 290 113 290 122 C290 130 282 136 270 136 L252 136 Z"/>
+      <!-- horn + ear -->
+      <path fill="url(#m-horn)" d="M252 52 C253 40 259 26 268 16 C270 28 269 42 263 54 Z"/>
+      <path fill="#fff" d="M268 58 C275 49 284 44 293 44 C290 56 283 65 274 68 Z"/>
+      <path fill="#f2b8d4" d="M272 58 C277 52 283 48 288 48 C286 55 281 61 276 64 Z"/>
+      <!-- mane -->
+      <path fill="url(#m-mane)" d="M228 60 C204 46 174 46 152 58 C176 60 194 68 204 82 C186 78 166 82 152 92 C174 94 190 104 198 120 L216 112 C210 98 214 82 226 74 Z"/>
+      <g id="uni-schleife" hidden>
+        <path fill="#e0537a" d="M204 66 C196 58 184 60 180 68 C186 72 194 74 202 72 C194 78 192 88 198 94 C206 90 210 82 208 74 C214 80 224 80 228 74 C222 68 212 64 204 66 Z"/>
+        <circle cx="203" cy="73" r="5" fill="#f78fb3"/>
+      </g>
+      <!-- face -->
+      <g id="uni-auge-offen">
+        <circle cx="258" cy="82" r="6.5" fill="#3d2b66"/>
+        <circle cx="260.5" cy="79.5" r="2.2" fill="#fff"/>
+      </g>
+      <path id="uni-auge-zu" hidden d="M251 82 C255 86 261 86 265 82" stroke="#3d2b66" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+      <ellipse cx="244" cy="98" rx="8" ry="5.5" fill="#f8a8c8" opacity=".65"/>
+      <path d="M272 122 C276 125 281 125 284 122" fill="none" stroke="#8d6bb0" stroke-width="3.5" stroke-linecap="round"/>
+      <g id="uni-futter" hidden></g>
+    </svg>
+  </div>
+
+  <div class="pflege" id="pflege" role="toolbar" aria-label="Pflege"></div>
+</section>
+
+<!-- ============ 7 · STICKER-ALBUM ============ -->
+<section id="screen-album" class="screen" aria-label="Sticker-Album">
+  <button class="btn-home" data-go="karte" aria-label="Zur Karte">
+    <svg viewBox="0 0 48 48"><path d="M8 24 L24 8 L40 24 M13 21 L13 40 L35 40 L35 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="album-rahmen">
+    <p class="album-titel">📖 Mein Album</p>
+    <div class="album-layout">
+      <div class="album-tabs" id="album-tabs" role="tablist"></div>
+      <div class="album-seite" id="album-seite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8 · ELTERN-ECKE ============ -->
+<section id="screen-eltern-gate" class="screen" aria-label="Eltern-Türe">
+  <button class="btn-home" data-go="karte" aria-label="Zur Karte">
+    <svg viewBox="0 0 48 48"><path d="M8 24 L24 8 L40 24 M13 21 L13 40 L35 40 L35 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="gate-mitte">
+    <p class="gate-hinweis">NUR FÜR ERWACHSENE</p>
+    <h2 class="gate-titel">Halte den Kreis<br>3 Sekunden gedrückt</h2>
+    <button class="gate-kreis" id="gate-kreis" aria-label="3 Sekunden halten">
+      <svg class="gate-ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#4b3a72" stroke-width="8"/>
+        <circle id="gate-progress" cx="60" cy="60" r="52" fill="none" stroke="#f0c964" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90 60 60)"/>
+      </svg>
+      <svg class="gate-schild" viewBox="0 0 24 24" aria-hidden="true"><path fill="#f0c964" d="M12 2 L20 5 v6 c0 5 -3.4 9.4 -8 11 c-4.6 -1.6 -8 -6 -8 -11 V5 Z M10.5 14.5 L7.5 11.5 l1.4 -1.4 l1.6 1.6 l4.6 -4.6 l1.4 1.4 Z"/></svg>
+    </button>
+    <p class="gate-sub">Loslassen bricht ab</p>
+  </div>
+</section>
+
+<section id="screen-eltern" class="screen" aria-label="Eltern-Ecke">
+  <div class="eltern-kopf">
+    <button class="btn-home eltern-zurueck" data-go="karte" aria-label="Zurück">
+      <svg viewBox="0 0 48 48"><path d="M30 10 L16 24 L30 38" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <h2>Eltern-Ecke</h2>
+  </div>
+  <div class="eltern-grid">
+    <div class="eltern-karte">
+      <h3>🔈 Ton & Musik</h3>
+      <label class="schalter-zeile"><span>Musik</span><input type="checkbox" id="opt-musik" class="schalter"></label>
+      <label class="schalter-zeile"><span>Soundeffekte</span><input type="checkbox" id="opt-sound" class="schalter" checked></label>
+    </div>
+    <div class="eltern-karte">
+      <h3>⭐ Fortschritt</h3>
+      <div class="fortschritt" id="eltern-fortschritt"></div>
+    </div>
+    <div class="eltern-karte">
+      <h3>⚙️ Verwaltung</h3>
+      <p class="eltern-info">🔒 Keine Käufe, keine Werbung, kein Internet nötig ✓</p>
+      <button class="btn-reset-all" id="btn-reset-all">↺ Fortschritt zurücksetzen</button>
+    </div>
+  </div>
+</section>
+
+<script src="js/state.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/sparkle.js"></script>
+<script src="js/karte.js"></script>
+<script src="js/malen.js"></script>
+<script src="js/anziehen.js"></script>
+<script src="js/garten.js"></script>
+<script src="js/trank.js"></script>
+<script src="js/stall.js"></script>
+<script src="js/album.js"></script>
+<script src="js/eltern.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
