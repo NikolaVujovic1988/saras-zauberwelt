@@ -58,7 +58,8 @@ const App = (() => {
     Eltern.init();
     go("karte");
 
-    if ("serviceWorker" in navigator && location.protocol === "https:") {
+    const local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    if ("serviceWorker" in navigator && (location.protocol === "https:" || local)) {
       navigator.serviceWorker.register("sw.js").catch(() => {});
     }
   }

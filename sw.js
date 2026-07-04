@@ -1,5 +1,5 @@
 /* Saras Zauberwelt — offline-first service worker */
-const CACHE = "saras-zauberwelt-v3";
+const CACHE = "saras-zauberwelt-v8";
 const ASSETS = [
   "./",
   "index.html",
@@ -20,7 +20,13 @@ const ASSETS = [
   "icons/icon.svg",
   "icons/icon-192.png",
   "icons/icon-512.png",
+  "icons/icon-512-maskable.png",
   "icons/apple-touch-icon.png",
+  "icons/sara-avatar.png",
+  "img/einhorn-1.png",
+  "img/einhorn-2.png",
+  "img/prinzessin-1.png",
+  "img/meerjungfrau-1.png",
 ];
 
 self.addEventListener("install", (e) => {

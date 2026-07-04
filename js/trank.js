@@ -49,11 +49,15 @@ const Trank = (() => {
     document.getElementById("btn-brauen").hidden = mix.length < 2 || brauend;
     // liquid color follows the mix
     const [a, b] = mischFarbe();
-    const grad = document.getElementById("trank-liquid");
-    if (grad) grad.style.fill = a;
-    const defGrad = document.querySelector("#trank-liquid");
-    if (defGrad) defGrad.setAttribute("fill", a);
-    void b;
+    const stops = document.querySelectorAll("#trank-liquid stop");
+    if (stops[0]) stops[0].setAttribute("stop-color", a);
+    if (stops[1]) stops[1].setAttribute("stop-color", b);
+    const liquid = document.getElementById("kessel-liquid");
+    if (liquid) {
+      liquid.classList.remove("liquid-pop");
+      void liquid.getBoundingClientRect();
+      liquid.classList.add("liquid-pop");
+    }
   }
 
   function blase() {

@@ -12,12 +12,15 @@ const Stall = (() => {
     { id: "schleife", label: "Schleife", icon: `<path fill="#e0537a" d="M22 22 C14 14 4 16 2 24 C8 28 16 29 22 26 C16 32 16 40 22 44 C28 40 30 32 26 26 C32 29 40 28 46 24 C44 16 34 14 26 22 C25 21 23 21 22 22 Z"/><circle cx="24" cy="24" r="5" fill="#f78fb3"/>` },
   ];
 
+  const HERZ_VOLL = `<svg viewBox="0 0 32 30" aria-hidden="true"><path fill="#f78fb3" stroke="#4a3a6e" stroke-width="2.2" stroke-linejoin="round" d="M16 28 C9 22 3 17 3 10 C3 5 6.8 2 11 2 C13.5 2 15.2 3.1 16 5 C16.8 3.1 18.5 2 21 2 C25.2 2 29 5 29 10 C29 17 23 22 16 28 Z"/><path d="M9 9 C10.2 6.6 13 6.4 14.6 8.8" fill="none" stroke="#ffd7e6" stroke-width="2.4" stroke-linecap="round"/></svg>`;
+  const HERZ_LEER = `<svg viewBox="0 0 32 30" aria-hidden="true"><path fill="#fff7fb" opacity=".36" stroke="#f3d6e8" stroke-width="2.2" stroke-linejoin="round" d="M16 28 C9 22 3 17 3 10 C3 5 6.8 2 11 2 C13.5 2 15.2 3.1 16 5 C16.8 3.1 18.5 2 21 2 C25.2 2 29 5 29 10 C29 17 23 22 16 28 Z"/></svg>`;
+
   function renderHerzen(neu) {
     const el = document.getElementById("glueck-herzen");
     el.innerHTML = "";
     for (let i = 0; i < MAX; i++) {
       const s = document.createElement("span");
-      s.textContent = i < glueck ? "💗" : "🤍";
+      s.innerHTML = i < glueck ? HERZ_VOLL : HERZ_LEER;
       if (i >= glueck) s.className = "herz-leer";
       if (neu && i === glueck - 1) s.classList.add("neu");
       el.appendChild(s);

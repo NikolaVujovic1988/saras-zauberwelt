@@ -204,7 +204,14 @@ const Garten = (() => {
     [{ l: 18, t: 46, d: 0 }, { l: 52, t: 34, d: 3 }, { l: 72, t: 56, d: 6 }].forEach((f) => {
       const el = document.createElement("span");
       el.className = "falter";
-      el.textContent = "🦋";
+      el.innerHTML = `<svg viewBox="0 0 48 42" aria-hidden="true">
+        <path fill="#9d7bec" d="M22 22 C16 9 6 7 3 14 C0 21 7 29 17 30 C9 33 8 40 14 41 C19 42 23 35 24 29 Z"/>
+        <path fill="#f8a8c8" d="M26 22 C32 9 42 7 45 14 C48 21 41 29 31 30 C39 33 40 40 34 41 C29 42 25 35 24 29 Z"/>
+        <ellipse cx="24" cy="27" rx="3.4" ry="10" fill="#4a3a6e"/>
+        <circle cx="15" cy="21" r="3" fill="#f5d76e"/>
+        <circle cx="33" cy="21" r="3" fill="#f5d76e"/>
+        <path d="M21 18 C18 11 14 8 10 8 M27 18 C30 11 34 8 38 8" fill="none" stroke="#4a3a6e" stroke-width="2" stroke-linecap="round"/>
+      </svg>`;
       el.style.left = f.l + "%";
       el.style.top = f.t + "%";
       el.style.animationDelay = f.d + "s";

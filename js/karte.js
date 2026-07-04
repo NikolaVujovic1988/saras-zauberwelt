@@ -4,7 +4,7 @@ const Karte = (() => {
 
   const ORTE = [
     {
-      id: "anziehen", label: "Schloss", x: 46, y: 47, orb: 170,
+      id: "anziehen", label: "Schloss", x: 48, y: 43, orb: 215,
       icon: `<svg viewBox="0 0 96 96">
         <ellipse cx="48" cy="81" rx="36" ry="7" fill="#241640" opacity=".18"/>
         <path d="M15 35 L23 16 L31 35 Z" fill="#9d7bec" stroke="${OUT}" stroke-width="2.6" stroke-linejoin="round"/>
@@ -24,7 +24,7 @@ const Karte = (() => {
         </g>
       </svg>` },
     {
-      id: "trank", label: "Zauberturm", x: 74, y: 36, orb: 150,
+      id: "trank", label: "Zauberturm", x: 76, y: 31, orb: 126,
       icon: `<svg viewBox="0 0 96 96">
         <ellipse cx="48" cy="82" rx="28" ry="6" fill="#241640" opacity=".18"/>
         <path d="M28 77 C34 68 62 68 68 77 L70 84 L26 84 Z" fill="#8d6bb0" stroke="${OUT}" stroke-width="2.4" stroke-linejoin="round"/>
@@ -41,7 +41,7 @@ const Karte = (() => {
         </g>
       </svg>` },
     {
-      id: "malen", label: "Mal-Atelier", x: 21, y: 66, orb: 155,
+      id: "malen", label: "Mal-Atelier", x: 23, y: 68, orb: 196,
       icon: `<svg viewBox="0 0 96 96">
         <ellipse cx="48" cy="82" rx="32" ry="6" fill="#241640" opacity=".15"/>
         <path d="M18 73 C12 58 20 30 47 22 C73 14 86 33 81 49 C77 63 62 59 56 65 C50 71 59 79 47 83 C36 86 25 82 18 73 Z" fill="#fdf3fb" stroke="${OUT}" stroke-width="2.8" stroke-linejoin="round"/>
@@ -59,7 +59,7 @@ const Karte = (() => {
         </g>
       </svg>` },
     {
-      id: "garten", label: "Zaubergarten", x: 38, y: 82, orb: 145,
+      id: "garten", label: "Zaubergarten", x: 50, y: 81, orb: 188,
       icon: `<svg viewBox="0 0 96 96">
         <ellipse cx="48" cy="82" rx="31" ry="8" fill="#8d6bb0" opacity=".45"/>
         <path d="M48 82 L48 45" stroke="#3f8f5f" stroke-width="6.5" stroke-linecap="round"/>
@@ -75,7 +75,7 @@ const Karte = (() => {
         </g>
       </svg>` },
     {
-      id: "stall", label: "Einhorn-Stall", x: 64, y: 72, orb: 155,
+      id: "stall", label: "Einhorn-Stall", x: 72, y: 70, orb: 132,
       icon: `<svg viewBox="0 0 96 96">
         <ellipse cx="52" cy="82" rx="34" ry="6" fill="#241640" opacity=".15"/>
         <path fill="url(#m-mane2)" stroke="${OUT}" stroke-width="2.2" d="M30 36 C22 42 20 54 24 64 C27 72 34 78 43 80 C37 71 35 63 37 54 C39 47 36 40 30 36 Z"/>
@@ -94,7 +94,7 @@ const Karte = (() => {
         </g>
       </svg>` },
     {
-      id: "album", label: "Sticker-Album", x: 86, y: 60, orb: 135,
+      id: "album", label: "Sticker-Album", x: 89, y: 56, orb: 116,
       icon: `<svg viewBox="0 0 96 96">
         <ellipse cx="50" cy="81" rx="32" ry="6" fill="#241640" opacity=".15"/>
         <rect x="17" y="17" width="62" height="61" rx="11" fill="#fdf3fb" stroke="${OUT}" stroke-width="2.7"/>
@@ -115,6 +115,7 @@ const Karte = (() => {
     ORTE.forEach((o) => {
       const b = document.createElement("button");
       b.className = "ort";
+      b.classList.add("ort-" + o.id);
       b.style.left = o.x + "%";
       b.style.top = o.y + "%";
       b.style.setProperty("--orb", `clamp(104px, ${o.orb / 8}vmin, ${o.orb}px)`);
