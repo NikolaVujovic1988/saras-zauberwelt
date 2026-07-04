@@ -1,5 +1,5 @@
 /* Saras Zauberwelt — offline-first service worker */
-const CACHE = "saras-zauberwelt-v8";
+const CACHE = "saras-zauberwelt-v9";
 const ASSETS = [
   "./",
   "index.html",
